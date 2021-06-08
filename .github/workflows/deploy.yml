@@ -26,8 +26,8 @@ jobs:
           environment: production
       - uses: actions/github-script@v4
         id: determine-latest
-        result-encoding: string
         with:
+          result-encoding: string
           script: |
             const page = await github.actions.listWorkflowRuns({
               owner: "blindpirate",
