@@ -34,8 +34,8 @@ jobs:
               workflow_id: "deploy.yml",
               per_page: 1,
             });
-            console.log(JSON.stringify(page.workflow_runs[0]));
-            return page.workflow_runs[0];
+            console.log(JSON.stringify(page.data.workflow_runs[0]));
+            return page.data.workflow_runs[0];
       - name: Show timestamp
         run: echo "${{ steps.determine-latest.outputs.result }}"
       - name: Deploy my app
