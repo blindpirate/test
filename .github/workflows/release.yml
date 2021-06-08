@@ -19,3 +19,10 @@ jobs:
         id: random-color-generator
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+      - name: Test warning
+        run: echo "::warning file=app.js,line=1,col=5::Missing semicolon"
+      - name: Test error
+        run: echo "::error file=app.js,line=10,col=15::Something went wrong"
+      - name: Test debug
+        run: echo "::debug::Set the Octocat variable"
+
