@@ -1,0 +1,16 @@
+name: Release
+
+on: 
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Release
+        run: |
+          date "+%m-%d-%Y-%H-%M-%S"

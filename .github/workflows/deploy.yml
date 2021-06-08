@@ -1,13 +1,15 @@
 name: Deploy
 
 on: 
-  push:
-    branches:
-      - deploy
+  workflow_dispatch:
+    inputs:
+      buildTimestamp:
+        description: 'Build timestamp (empty to deploy the latest)'     
+        required: true
+        default: 'latest'
 
 jobs:
   deploy:
-    environment: production
     name: Deploy my app
     runs-on: ubuntu-latest
     steps:
@@ -21,7 +23,7 @@ jobs:
           environment: production
       - name: Deploy my app
         run: |
-          echo "It's deployed!"
+          echo "{{ github.event.inputs.buildTimestamp }}"
       - name: Update deployment status (success)
         if: success()
         uses: chrnorm/deployment-status@releases/v1
