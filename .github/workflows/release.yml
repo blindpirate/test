@@ -14,3 +14,8 @@ jobs:
       - name: Release
         run: |
           echo ::set-output name=buildTimestamp::"$(date +%m-%d-%Y-%H-%M-%S)"
+      - name: Set selected color
+        run: echo '::set-output name=SELECTED_COLOR::green'
+        id: random-color-generator
+      - name: Get color
+        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
