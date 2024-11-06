@@ -7,10 +7,10 @@ permissions:
   statuses: write
 
 jobs:
-  check_commit_status:
+  build_scan_commit_status:
     runs-on: ubuntu-latest
     steps:
-      - name: Handle Commit Status
+      - name: Publish BuildScan Commit Status
         uses: actions/github-script@v6
         with:
           script: |
