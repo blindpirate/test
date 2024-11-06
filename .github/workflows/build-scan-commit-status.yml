@@ -1,8 +1,7 @@
-name: Handle Commit Status
+name: Publish BuildScan Commit Status
 
 on:
-  status:
-    types: [created, updated]
+  status
 
 permissions:
   contents: write
