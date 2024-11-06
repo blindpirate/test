@@ -4,7 +4,7 @@ on:
   status
 
 permissions:
-  contents: write
+  statuses: write
 
 jobs:
   check_commit_status:
