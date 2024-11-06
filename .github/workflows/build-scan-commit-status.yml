@@ -10,18 +10,44 @@ jobs:
   check_commit_status:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Handle Commit Status
+        uses: actions/github-script@v6
         with:
-          node-version: '16'
+          script: |
+            const commitStatus = context.payload;
+            const statusUrl = commitStatus.target_url;
+            const state = commitStatus.state;
+            const sha = commitStatus.sha;
+            const { owner, repo } = context.repo;
 
-      - name: Install dependencies
-        run: npm install
+            // Check if the URL starts with "https://builds.gradle.org"
+            if (!statusUrl || !statusUrl.startsWith("https://builds.gradle.org")) {
+              console.log("URL does not start with 'https://builds.gradle.org'. Exiting.");
+              return;
+            }
 
-      - name: Run Commit Status Action
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node ./.github/actions/build-scan-commit-status-action.js
+            // Define base scan URL
+            const baseScanUrl = `https://ge.gradle.org/scans?search.names=gitCommitId&search.rootProjectNames=${repo}`;
+
+            async function setCommitStatus(context, description, scanUrl, state) {
+              await github.rest.repos.createCommitStatus({
+                owner,
+                repo,
+                sha,
+                state,
+                context,
+                description,
+                target_url: scanUrl,
+              });
+              console.log(`Published '${context}' status.`);
+            }
+
+            if (state === 'success') {
+              // Always publish "BuildScanAll" commit status
+              const scanUrl = `${baseScanUrl}&search.values=${sha}`;
+              await setCommitStatus("BuildScanAll", "Build Scan (All)", scanUrl, "success");
+            } else if (state === 'failure') {
+              // Always publish "BuildScanFailure" commit status
+              const scanUrl = `${baseScanUrl}&search.buildOutcome=failure&search.values=${sha}`;
+              await setCommitStatus("BuildScanFailure", "Build Scan (Failure)", scanUrl, "failure");
+            }
