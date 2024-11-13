@@ -18,4 +18,4 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           path: .github/actions/gradle-github-actions
       - name: Publish BuildScan Commit Status
-        uses: ./.github/actions/gradle-github-actions/buildscan-commit-status-action
+        uses: gradle/gradle-github-actions/commit-author-check-action@5dfb612b0cef8e6123bda43f63ddef8abc80a977
