@@ -10,40 +10,12 @@ jobs:
   build_scan_commit_status:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish BuildScan Commit Status
-        uses: actions/github-script@v6
+      - name: Checkout gradle-github-actions Repo
+        uses: actions/checkout@v4
         with:
-          script: |
-            const commitStatus = context.payload;
-            const statusUrl = commitStatus.target_url;
-            const state = commitStatus.state;
-            const sha = commitStatus.sha;
-            const { owner, repo } = context.repo;
-
-            if (!statusUrl || !statusUrl.startsWith("https://builds.gradle.org")) {
-              console.log("URL does not start with 'https://builds.gradle.org'. Exiting.");
-              return;
-            }
-
-            const baseScanUrl = `https://ge.gradle.org/scans?search.names=gitCommitId&search.rootProjectNames=${repo}`;
-
-            async function setCommitStatus(context, description, scanUrl, state) {
-              await github.rest.repos.createCommitStatus({
-                owner,
-                repo,
-                sha,
-                state,
-                context,
-                description,
-                target_url: scanUrl,
-              });
-              console.log(`Published '${context}' status.`);
-            }
-
-            if (state === 'success') {
-              const scanUrl = `${baseScanUrl}&search.values=${sha}`;
-              await setCommitStatus("BuildScan All", "Build Scan (All)", scanUrl, "success");
-            } else if (state === 'failure') {
-              const scanUrl = `${baseScanUrl}&search.buildOutcome=failure&search.values=${sha}`;
-              await setCommitStatus("BuildScan Failed", "Build Scan (Failure)", scanUrl, "failure");
-            }
+          repository: gradle/gradle-github-actions
+          ref: main
+          token: ${{ secrets.GH_PAT }}
+          path: .github/actions/gradle-github-actions
+      - name: Publish BuildScan Commit Status
+        uses: ./.github/actions/gradle-github-actions/buildscan-commit-status-action
