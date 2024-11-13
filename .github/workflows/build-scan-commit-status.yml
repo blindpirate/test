@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: gradle/gradle-github-actions
-          ref: 5dfb612b0cef8e6123bda43f63ddef8abc80a977
+          ref: 6fb7998dfcc47459753bad6d7921497786078c83
           token: ${{ secrets.GH_PAT }}
           path: .github/actions/gradle-github-actions
       - name: Publish BuildScan Commit Status
