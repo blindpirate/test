@@ -7,11 +7,14 @@ on:
       - release
       - release7x
 
+permissions:
+  issues: write
+
 jobs:
   closeIssueOnPrMerge:
     runs-on: ubuntu-latest
     steps:
       - name: Closes issues related to a merged pull request.
-        uses: ldez/gha-mjolnir@v1.4.1
+        uses: ldez/gha-mjolnir@87f109db53a534eaa1b6e03449250a8185f64905
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
